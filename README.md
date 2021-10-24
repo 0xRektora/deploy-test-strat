@@ -10,7 +10,7 @@ npx hardhat get_pools --address 0x...
 
 Deploy a strategy contract, deploy a vault contract and set the jar address of the strategy to the vault contract using the current signer (PRIVATE_KEY account in the .env), it'll also verify the contract using the blockscan API key. (Currently doesn't work on Moonriver)
 
-`Will automatically compile the contract for you`
+`Will automatically compile, deploy, verify and run the vault tests for you`
 
 ```
 npx hardhat deploy_vault
