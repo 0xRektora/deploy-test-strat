@@ -29,6 +29,9 @@ export const deployVault = async (taskArgs: { address: string, nocompile: boolea
         await compile();
     }
 
+    console.log(`Deploying on ChainId ${process.env.CHAIN_ID}`);
+
+
     // Deploy strat
     const strategyFactory = await hre.ethers.getContractFactory('StrategyTwoAssets')
     console.log(`Gas price: ${hre.ethers.utils.formatUnits(await hre.ethers.provider.getGasPrice(), 'gwei')} gwei`);
@@ -50,8 +53,10 @@ export const deployVault = async (taskArgs: { address: string, nocompile: boolea
     console.log(`Strategy Jar address set to vault address at ${vault.address}`);
 
     // Verify contracts 
-    await verifyStrat(strategy.address)
-    await verifyVault(vault.address, strategy.address)
+    if (Number(hre.network.config.chainId) === Number(process.env.CHAIN_ID)) {
+        await verifyStrat(strategy.address)
+        await verifyVault(vault.address, strategy.address)
+    }
 
     // Run the tests
     await hre.run("vault_test", { address: vault.address })
