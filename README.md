@@ -53,6 +53,9 @@ yarn global add npx
 
 # Usage
 
+By default it'll fork the mainnet and execute locally.
+To run on a mainnet, just add `--network mainnet` at the end of the command.
+
 Example with Koge vault
 
 ```
