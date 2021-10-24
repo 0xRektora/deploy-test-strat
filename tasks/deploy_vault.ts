@@ -49,11 +49,12 @@ export const deployVault = async (taskArgs: { address: string, nocompile: boolea
     (await strategy.setJar(vault.address)).wait()
     console.log(`Strategy Jar address set to vault address at ${vault.address}`);
 
+    // Verify contracts 
+    await verifyStrat(strategy.address)
+    await verifyVault(vault.address, strategy.address)
+
+    // Run the tests
     await hre.run("vault_test", { address: vault.address })
 
-    // Verify contracts 
-    // No need on MOVR
-    // await verifyStrat(strategy.address)
-    // await verifyVault(vault.address, strategy.address)
 
 }
