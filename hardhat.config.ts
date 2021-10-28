@@ -58,12 +58,9 @@ const config: HardhatUserConfig = {
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
   },
-  // Moonriver doesn't need a blockscan
-  ...(Number(process.env.CHAIN_ID || 1) !== 1285) ? {
-    etherscan: {
-      apiKey: process.env.BLOCKSCAN_KEY
-    }
-  } : {}
+  etherscan: {
+    apiKey: process.env.BLOCKSCAN_KEY
+  }
 };
 
 export default config;
