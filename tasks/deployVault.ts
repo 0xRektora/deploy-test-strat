@@ -22,9 +22,9 @@ async function verifyVault(vaultAddress: string, stratAddress: string) {
     console.log('stderr:', stderr);
 }
 
-export const deployVault = async (taskArgs: { address: string, nocompile: boolean }, hre: HardhatRuntimeEnvironment) => {
+export const deployVault = async (taskArgs: { address: string, noCompile: boolean }, hre: HardhatRuntimeEnvironment) => {
 
-    if (!taskArgs.nocompile) {
+    if (!taskArgs.noCompile) {
         // Compile
         await compile();
     }
