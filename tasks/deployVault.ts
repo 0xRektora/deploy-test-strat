@@ -1,32 +1,11 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { VaultBase__factory } from "../typechain";
 
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
-
-async function compile() {
-    const { stdout, stderr } = await exec('npx hardhat compile');
-    console.log('stdout:', stdout);
-    console.log('stderr:', stderr);
-}
-
-async function verifyStrat(stratAddress: string) {
-    const { stdout, stderr } = await exec(`npx hardhat verify --network mainnet ${stratAddress}`);
-    console.log('stdout:', stdout);
-    console.log('stderr:', stderr);
-}
-
-async function verifyVault(vaultAddress: string, stratAddress: string) {
-    const { stdout, stderr } = await exec(`npx hardhat verify --network mainnet ${vaultAddress} "${stratAddress}"`);
-    console.log('stdout:', stdout);
-    console.log('stderr:', stderr);
-}
-
 export const deployVault = async (taskArgs: { address: string, noCompile: boolean }, hre: HardhatRuntimeEnvironment) => {
 
     if (!taskArgs.noCompile) {
         // Compile
-        await compile();
+        await hre.run('compile');
     }
 
     console.log(`Deploying on ChainId ${process.env.CHAIN_ID}`);
@@ -53,9 +32,9 @@ export const deployVault = async (taskArgs: { address: string, noCompile: boolea
     console.log(`Strategy Jar address set to vault address at ${vault.address}`);
 
     // Verify contracts 
-    if (Number(hre.network.config.chainId) === Number(process.env.CHAIN_ID)) {
-        await verifyStrat(strategy.address)
-        await verifyVault(vault.address, strategy.address)
+    if (Number(hre.network.config.chainId) === Number(process.env.CHAIN_ID) && Number(hre.network.config.chainId) !== 1285) {
+        await hre.run('verify', { network: 'mainnet', address: strategy.address })
+        await hre.run('verify', { network: 'mainnet', address: vault.address, constructorArgsParams: [strategy.address] })
     }
 
     // Run the tests
