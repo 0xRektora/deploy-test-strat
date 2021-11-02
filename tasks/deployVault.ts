@@ -38,7 +38,7 @@ export const deployVault = async (taskArgs: { address: string, noCompile: boolea
     }
 
     // Run the tests
-    await hre.run("vault_test", { address: vault.address })
+    await hre.run("vault-test", { address: vault.address })
 
 
 }
