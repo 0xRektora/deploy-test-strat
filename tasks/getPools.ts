@@ -9,6 +9,7 @@ export const getPools = async (taskArgs: { address: string }, hre: HardhatRuntim
     const masterChef = masterChefFactory.attach(taskArgs.address)
 
     const poolsLength = await masterChef.poolLength()
+    const pools = []
 
     for (let i = 0; i < poolsLength.toNumber(); i++) {
         const poolInfo = await masterChef.poolInfo(i)
@@ -25,8 +26,9 @@ export const getPools = async (taskArgs: { address: string }, hre: HardhatRuntim
             token0: `${token0name} : ${token0.address}`,
             token1: `${token1name} : ${token1.address}`
         }
+
         console.log(data);
-
+        pools.push(data)
     }
-
+    return pools
 }
