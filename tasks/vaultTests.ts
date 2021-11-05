@@ -1,6 +1,5 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { ERC20, ERC20__factory, StrategyTwoAssets, StrategyTwoAssets__factory, VaultBase, VaultBase__factory } from "../typechain";
 
 // KogeKoge Jar vault 0x992Ae1912CE6b608E0c0d2BF66259ab1aE62A657
 // KogeKoge Strategy 0x587a50436b97F2278AbC01E00180539EE98fe415
@@ -13,12 +12,12 @@ export const vaultTests = async (taskArgs: { address: string }, hre: HardhatRunt
     }
 
     // Loading vault
-    const vaultBaseFactory: VaultBase__factory = await hre.ethers.getContractFactory('VaultBase')
-    const vault: VaultBase = vaultBaseFactory.attach(vaultAddress)
+    const vaultBaseFactory = await hre.ethers.getContractFactory('VaultBase')
+    const vault = vaultBaseFactory.attach(vaultAddress)
 
     // Loading vault LP
-    const erc20TokenBaseFactory: ERC20__factory = await hre.ethers.getContractFactory('ERC20')
-    const erc20Token: ERC20 = erc20TokenBaseFactory.attach(await vault.token())
+    const erc20TokenBaseFactory = await hre.ethers.getContractFactory('ERC20')
+    const erc20Token = erc20TokenBaseFactory.attach(await vault.token())
 
 
     // Loading LP infos
@@ -28,11 +27,11 @@ export const vaultTests = async (taskArgs: { address: string }, hre: HardhatRunt
 
     // Loading strategy
     const strategyAddress = await vault.strategy()
-    const strategyFactory: StrategyTwoAssets__factory = await hre.ethers.getContractFactory('StrategyTwoAssets')
-    const strategy: StrategyTwoAssets = strategyFactory.attach(strategyAddress)
+    const strategyFactory = await hre.ethers.getContractFactory('StrategyTwoAssets')
+    const strategy = strategyFactory.attach(strategyAddress)
 
     // Loading reward token 
-    const rewardToken: ERC20 = erc20TokenBaseFactory.attach(await strategy.rewardTokenAddr())
+    const rewardToken = erc20TokenBaseFactory.attach(await strategy.rewardTokenAddr())
 
     if (walletLps.toString() === "0") {
         console.log(`No ${erc20Name} LP found, task stopping.`);

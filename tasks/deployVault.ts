@@ -1,5 +1,4 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { VaultBase__factory } from "../typechain";
 
 export const deployVault = async (taskArgs: { address: string, noCompile: boolean }, hre: HardhatRuntimeEnvironment) => {
 
@@ -21,7 +20,7 @@ export const deployVault = async (taskArgs: { address: string, noCompile: boolea
     // const strategy = strategyFactory.attach("0x77F5095054087cb0a2196Ef6e572890c74b78332")
 
     // Deploy vault
-    const vaultFactory: VaultBase__factory = await hre.ethers.getContractFactory('VaultBase')
+    const vaultFactory = await hre.ethers.getContractFactory('VaultBase')
     const vault = await vaultFactory.deploy(strategy.address)
 
     await vault.deployTransaction.wait()
