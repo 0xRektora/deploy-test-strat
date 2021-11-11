@@ -4,6 +4,8 @@ import { HardhatUserConfig } from "hardhat/config";
 import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
 import "@nomiclabs/hardhat-etherscan";
+import "hardhat-deploy";
+import "@nomiclabs/hardhat-ethers";
 
 dotenv.config();
 
@@ -16,6 +18,9 @@ const config: HardhatUserConfig = {
                 runs: 200,
             },
         },
+    },
+    namedAccounts: {
+        deployer: 0,
     },
     defaultNetwork: "hardhat",
     networks: {
