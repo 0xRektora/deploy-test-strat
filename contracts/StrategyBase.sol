@@ -99,7 +99,7 @@ abstract contract BaseStrategy is Ownable, ReentrancyGuard {
         IERC20(path[0]).safeApprove(dexRouter, 0);
         IERC20(path[0]).safeApprove(dexRouter, _amount);
 
-        IUniswapRouterV2(dexRouter).swapExactTokensForTokens(
+        IUniswapV2Router02(dexRouter).swapExactTokensForTokens(
             _amount,
             0,
             path,
@@ -119,7 +119,7 @@ abstract contract BaseStrategy is Ownable, ReentrancyGuard {
         IERC20(path[0]).safeApprove(dexRouter, 0);
         IERC20(path[0]).safeApprove(dexRouter, _amount);
 
-        IUniswapRouterV2(dexRouter)
+        IUniswapV2Router02(dexRouter)
             .swapExactTokensForTokensSupportingFeeOnTransferTokens(
                 _amount,
                 0,
@@ -142,7 +142,7 @@ abstract contract BaseStrategy is Ownable, ReentrancyGuard {
             IERC20(token2).safeApprove(dexRouter, 0);
             IERC20(token2).safeApprove(dexRouter, _token2);
 
-            IUniswapRouterV2(dexRouter).addLiquidity(
+            IUniswapV2Router02(dexRouter).addLiquidity(
                 token1,
                 token2,
                 _token1,
