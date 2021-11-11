@@ -18,11 +18,16 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 });
 
 task("deploy-vault", deployVault).addFlag("noCompile", "If used, will not trigger a smart contract compilation")
-task("get-pools", getPools).addParam("address", "The masterchef address", undefined, string, false)
+
+task("get-pools", getPools)
+    .addParam("address", "The masterchef address", undefined, string, false)
+
 task("vault-test", vaultTests).addParam("address", "The deployed vault address", undefined, string, false)
+
 task("swap-lp", swapAndGetLp)
     .addParam("masterchef", "The masterchef address", undefined, string, false)
     .addParam("router", "The router address", undefined, string, false)
+    .addParam("native", "The chain wrapped native token address", undefined, string, false)
     .addParam("swapAmount", "The native amount to swap", undefined, string, false)
     .addParam("poolIds", "The pool id addresses, should be a string separated by a comma", undefined, string, false)
 
