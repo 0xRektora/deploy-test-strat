@@ -15,7 +15,6 @@ pragma solidity ^0.6.12;
 pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "hardhat/console.sol";
 
 interface IUniswapV2Pair {
     function token0() external view returns (address);
@@ -88,23 +87,31 @@ contract GetPools is IStruct {
         for (uint256 _index = 0; _index < _poolsLength; _index++) {
             PoolInfo memory _poolInfo = _masterchef.poolInfo(_index);
             IUniswapV2Pair _lpPair = IUniswapV2Pair(_poolInfo.lpToken);
-            ERC20 _token0 = ERC20(_lpPair.token0());
-            ERC20 _token1 = ERC20(_lpPair.token1());
+            ERC20 _lp = ERC20(_poolInfo.lpToken);
+            ERC20 _token0 = ERC20(address(0));
+            ERC20 _token1 = ERC20(address(0));
+            try _lpPair.token0() returns (address) {
+                _token0 = ERC20(_lpPair.token0());
+                _token1 = ERC20(_lpPair.token1());
+            } catch (bytes memory) {}
 
+            bool isSingleAsset = address(_token0) == address(0);
             _formattedPoolInfo[_index] = FormattedPoolInfo({
                 id: _index,
                 lpToken: _poolInfo.lpToken,
-                lpPair: string(
-                    abi.encodePacked(_token0.name(), " - ", _token1.name())
-                ),
+                lpPair: isSingleAsset
+                    ? string(abi.encodePacked(_lp.name(), " - ", _lp.name()))
+                    : string(
+                        abi.encodePacked(_token0.name(), " - ", _token1.name())
+                    ),
                 allocPoint: _poolInfo.allocPoint,
                 token0: TokenInfo({
-                    name: _token0.name(),
-                    tAddress: address(_token0)
+                    name: isSingleAsset ? _lp.name() : _token0.name(),
+                    tAddress: address(isSingleAsset ? _lp : _token0)
                 }),
                 token1: TokenInfo({
-                    name: _token1.name(),
-                    tAddress: address(_token1)
+                    name: isSingleAsset ? _lp.name() : _token1.name(),
+                    tAddress: address(isSingleAsset ? _lp : _token1)
                 })
             });
         }
