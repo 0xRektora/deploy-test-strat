@@ -90,7 +90,8 @@ export const vaultTests = async (taskArgs: { address: string }, hre: HardhatRunt
     const lpsAfterHarvest = (await vault.balanceOf(wallet.address))
     const ratio = hre.ethers.utils.formatUnits((await vault.getRatio()).toString(), 'wei')
     if (lpsAfterHarvest.mul(ratio).lte(shareAfterDeposit)) {
-        console.log("Harvesting didn't augment the user LPs");
+        throw new Error("Harvesting didn't augment the user LPs")
+
     } else {
         console.log("Harvest function working");
     }
@@ -102,7 +103,7 @@ export const vaultTests = async (taskArgs: { address: string }, hre: HardhatRunt
     const balanceAfterWithdraw = await erc20Token.balanceOf(wallet.address)
 
     if ((balanceAfterWithdraw).lt(walletLps)) {
-        console.log("The amount withdrawn is less than the amount deposited");
+        throw new Error("The amount withdrawn is less than the amount deposited")
     } else {
         console.log("Withdraw function working");
     }
