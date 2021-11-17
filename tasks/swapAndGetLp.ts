@@ -19,6 +19,7 @@ const getWrappedTokens = async (hre: HardhatRuntimeEnvironment, wrappedTk: Wrapp
     })).wait()
 }
 
+// npx hardhat swap-lp --masterchef 0xe5AFC91CEA5df74748A2b07e1d48E4e01aacF52B --router 0x845E76A8691423fbc4ECb8Dd77556Cb61c09eE25 --native 0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83 --swap-amount "0.01" --pool-ids "0,1,9,14" --network localhost --show-stack-traces
 export const swapAndGetLp = async (taskArgs: { masterchef: string, router: string, poolIds: string, swapAmount?: string }, hre: HardhatRuntimeEnvironment) => {
     await hre.run('compile')
     await hre.run('deploy')
@@ -80,6 +81,9 @@ export const swapAndGetLp = async (taskArgs: { masterchef: string, router: strin
         // WMATIC SUPPORT
         const token0 = pool.token0.tAddress
         const token1 = pool.token1.tAddress
+        if (token0 === token1) {
+            continue
+        }
         const amount0 = token0 === wrappedTk.address
             ? swapAmount
             : swaps
@@ -91,7 +95,7 @@ export const swapAndGetLp = async (taskArgs: { masterchef: string, router: strin
                 .find(e => (e.token.toLowerCase() === pool.token1.tAddress.toLowerCase()))
                 ?.amountSwapped ?? 0
         console.log("Swapping", token0, token1);
-        console.log("for", amount0, amount1);
+        console.log("for", hre.ethers.utils.formatEther(amount0), hre.ethers.utils.formatEther(amount1));
 
         if (token0 === wrappedTk.address || token1 === wrappedTk.address) {
             console.log("need to swap");

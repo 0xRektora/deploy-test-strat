@@ -144,11 +144,17 @@ contract AutoSwap is IMasterChefStruct {
         console.log("_tokens %s", _tokens.length);
 
         for (uint256 index = 0; index < _tokens.length; index++) {
+            if (_tokens[index] == _wrapped) continue;
             address pairAddress = factory.getPair(_wrapped, _tokens[index]);
             IUniswapV2Pair pair = IUniswapV2Pair(pairAddress);
-            address toSwap = pair.token0() == _wrapped
-                ? pair.token1()
-                : pair.token0();
+            address toSwap = address(0);
+            try pair.token0() returns (address) {
+                toSwap = pair.token0() == _wrapped
+                    ? pair.token1()
+                    : pair.token0();
+            } catch (bytes memory) {
+                toSwap = address(pair);
+            }
             if (pairAddress != nullAddr) {
                 address[] memory path = new address[](2);
                 path[0] = _wrapped;
